@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  
+  dominickbrasileiro-database:
+    container_name: dominickbrasileiro-database
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - dominickbrasileiro
+
+  dominickbrasileiro-app:
+    depends_on:
+      - dominickbrasileiro-database
+    container_name: dominickbrasileiro-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    networks:
+      - dominickbrasileiro
+
+  dominickbrasileiro-nginx:
+    depends_on: 
+      - dominickbrasileiro-app
+    container_name: dominickbrasileiro-nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - dominickbrasileiro
+
+networks:
+  dominickbrasileiro:
+    driver: bridge
