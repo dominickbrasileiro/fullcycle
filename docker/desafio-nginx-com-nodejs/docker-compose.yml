@@ -22,6 +22,8 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+    entrypoint: |
+      sh -c "/wait-for-it.sh dominickbrasileiro-database:3306 --strict --timeout=300 -- node src/index.js"
     networks:
       - dominickbrasileiro
 
@@ -40,3 +42,4 @@ services:
 networks:
   dominickbrasileiro:
     driver: bridge
+
